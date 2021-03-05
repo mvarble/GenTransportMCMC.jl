@@ -1,0 +1,8 @@
+name = "GenTransportMCMC"
+uuid = "68ca5df4-893c-4f20-b444-b08a145f1cb5"
+authors = ["Matthew Varble <mrvarble@gmail.com>"]
+version = "0.0.0"
+
+[deps]
+Gen = "ea4f424c-a589-11e8-07c0-fd5c91b9da4a"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
