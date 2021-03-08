@@ -1,2 +1,3 @@
 [deps]
+Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 GenTransportMCMC = "68ca5df4-893c-4f20-b444-b08a145f1cb5"

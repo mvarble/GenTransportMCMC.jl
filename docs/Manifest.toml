@@ -11,9 +11,9 @@ uuid = "2a0f44e3-6c83-55bd-87e4-b1978d98bd5f"
 
 [[ChainRulesCore]]
 deps = ["Compat", "LinearAlgebra", "SparseArrays"]
-git-tree-sha1 = "de4f08843c332d355852721adb1592bce7924da3"
+git-tree-sha1 = "53fed426c9af1eb68e63b3999e96454c2db79757"
 uuid = "d360d2e6-b24c-11e9-a2a3-2a2ae2dbcce4"
-version = "0.9.29"
+version = "0.9.27"
 
 [[CommonSubexpressions]]
 deps = ["MacroTools", "Test"]
@@ -34,9 +34,9 @@ uuid = "e66e0078-7015-5450-92f7-15fbd957f2ae"
 version = "0.3.4+0"
 
 [[DataAPI]]
-git-tree-sha1 = "dfb3b7e89e395be1e25c2ad6d7690dc29cc53b1d"
+git-tree-sha1 = "8ab70b4de35bb3b8cc19654f6b893cf5164f8ee8"
 uuid = "9a962f9c-6df0-11e9-0e5d-c546b8b5ee8a"
-version = "1.6.0"
+version = "1.5.1"
 
 [[DataStructures]]
 deps = ["Compat", "InteractiveUtils", "OrderedCollections"]
@@ -70,15 +70,27 @@ uuid = "8ba89e20-285c-5b6f-9357-94700520ee1b"
 
 [[Distributions]]
 deps = ["FillArrays", "LinearAlgebra", "PDMats", "Printf", "QuadGK", "Random", "SparseArrays", "SpecialFunctions", "Statistics", "StatsBase", "StatsFuns"]
-git-tree-sha1 = "0fc424e725eaec6ea3e9fa8df773bee18a1ab503"
+git-tree-sha1 = "f0e06a5b5ccda38e2fb8f59d91316e657b67047d"
 uuid = "31c24e10-a181-5473-b8eb-7969acd0382f"
-version = "0.24.14"
+version = "0.24.12"
+
+[[DocStringExtensions]]
+deps = ["LibGit2", "Markdown", "Pkg", "Test"]
+git-tree-sha1 = "50ddf44c53698f5e784bbebb3f4b21c5807401b1"
+uuid = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
+version = "0.8.3"
+
+[[Documenter]]
+deps = ["Base64", "Dates", "DocStringExtensions", "IOCapture", "InteractiveUtils", "JSON", "LibGit2", "Logging", "Markdown", "REPL", "Test", "Unicode"]
+git-tree-sha1 = "3ebb967819b284dc1e3c0422229b58a40a255649"
+uuid = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+version = "0.26.3"
 
 [[FillArrays]]
 deps = ["LinearAlgebra", "Random", "SparseArrays"]
-git-tree-sha1 = "4705cc4e212c3c978c60b1b18118ec49b4d731fd"
+git-tree-sha1 = "50eabdace27aa27b143f65b65e762bb0112a7708"
 uuid = "1a297f60-69ca-5386-bcde-b61e274b549b"
-version = "0.11.5"
+version = "0.11.1"
 
 [[ForwardDiff]]
 deps = ["CommonSubexpressions", "DiffResults", "DiffRules", "NaNMath", "Random", "SpecialFunctions", "StaticArrays"]
@@ -87,9 +99,9 @@ uuid = "f6369f11-7733-5829-9624-2563aa707210"
 version = "0.10.16"
 
 [[FunctionWrappers]]
-git-tree-sha1 = "241552bc2209f0fa068b6415b1942cc0aa486bcc"
+git-tree-sha1 = "e4813d187be8c7b993cb7f85cbf2b7bfbaadc694"
 uuid = "069b7b12-0de2-55c6-9aab-29f3d0a68a2e"
-version = "1.1.2"
+version = "1.1.1"
 
 [[FunctionalCollections]]
 deps = ["Test"]
@@ -98,16 +110,22 @@ uuid = "de31a74c-ac4f-5751-b3fd-e18cd04993ca"
 version = "0.5.0"
 
 [[Gen]]
-deps = ["Compat", "DataStructures", "Distributions", "ForwardDiff", "FunctionalCollections", "JSON", "LinearAlgebra", "MacroTools", "Parameters", "Random", "ReverseDiff", "SpecialFunctions"]
-git-tree-sha1 = "c205dc5cc2748fb7ded5deb82c0c73707fdd29f8"
+deps = ["DataStructures", "Distributions", "ForwardDiff", "FunctionalCollections", "JSON", "LinearAlgebra", "MacroTools", "Parameters", "Random", "ReverseDiff", "SpecialFunctions"]
+git-tree-sha1 = "00b42c1484d658ed9fd74ffe93ddc5259d0d010e"
 uuid = "ea4f424c-a589-11e8-07c0-fd5c91b9da4a"
-version = "0.4.2"
+version = "0.4.1"
 
 [[GenTransportMCMC]]
 deps = ["Gen", "Test"]
-path = "/home/mvarble/dropbox/Dropbox/development/gen-transport-mcmc"
+path = "/home/mvarble/dropbox/Dropbox/development/GenTransportMCMC.jl"
 uuid = "68ca5df4-893c-4f20-b444-b08a145f1cb5"
 version = "0.0.0"
+
+[[IOCapture]]
+deps = ["Logging"]
+git-tree-sha1 = "377252859f740c217b936cebcd918a44f9b53b59"
+uuid = "b5f81e59-6552-4d32-b1f0-c071b021bf89"
+version = "0.1.1"
 
 [[InteractiveUtils]]
 deps = ["Markdown"]
@@ -169,9 +187,9 @@ uuid = "efe28fd5-8261-553b-a9e1-b2916fc3738e"
 version = "0.5.3+4"
 
 [[OrderedCollections]]
-git-tree-sha1 = "4fa2ba51070ec13fcc7517db714445b4ab986bdf"
+git-tree-sha1 = "d45739abcfc03b51f6a42712894a593f74c80a23"
 uuid = "bac558e1-5e72-5ebc-8fee-abe8a469f55d"
-version = "1.4.0"
+version = "1.3.3"
 
 [[PDMats]]
 deps = ["LinearAlgebra", "SparseArrays", "SuiteSparse", "Test"]
@@ -215,9 +233,9 @@ uuid = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [[ReverseDiff]]
 deps = ["DiffResults", "DiffRules", "ForwardDiff", "FunctionWrappers", "LinearAlgebra", "MacroTools", "NaNMath", "Random", "SpecialFunctions", "StaticArrays", "Statistics"]
-git-tree-sha1 = "a4a45bcdc393c560fc13839dc1d19f3063fcb3b9"
+git-tree-sha1 = "ca062d55a167a81909772a325932e72c389f9724"
 uuid = "37e2e3b7-166d-5795-8a7a-e32c996b4267"
-version = "1.7.0"
+version = "1.5.0"
 
 [[Rmath]]
 deps = ["Random", "Rmath_jll"]
@@ -256,9 +274,9 @@ uuid = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
 
 [[SpecialFunctions]]
 deps = ["ChainRulesCore", "OpenSpecFun_jll"]
-git-tree-sha1 = "5919936c0e92cff40e57d0ddf0ceb667d42e5902"
+git-tree-sha1 = "75394dbe2bd346beeed750fb02baa6445487b862"
 uuid = "276daf66-3868-5448-9aa4-cd146d93841b"
-version = "1.3.0"
+version = "1.2.1"
 
 [[StaticArrays]]
 deps = ["LinearAlgebra", "Random", "Statistics"]
@@ -272,9 +290,9 @@ uuid = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
 
 [[StatsBase]]
 deps = ["DataAPI", "DataStructures", "LinearAlgebra", "Missings", "Printf", "Random", "SortingAlgorithms", "SparseArrays", "Statistics"]
-git-tree-sha1 = "400aa43f7de43aeccc5b2e39a76a79d262202b76"
+git-tree-sha1 = "7bab7d4eb46b225b35179632852b595a3162cb61"
 uuid = "2913bbd2-ae8a-5f71-8c99-4fb6c76f3a91"
-version = "0.33.3"
+version = "0.33.2"
 
 [[StatsFuns]]
 deps = ["Rmath", "SpecialFunctions"]
