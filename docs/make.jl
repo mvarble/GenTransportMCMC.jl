@@ -15,5 +15,6 @@ makedocs(
 
 deploydocs(
   repo = "github.com/mvarble/GenTransportMCMC.jl.git",
-  target = "build"
+  target = "build",
+  devbranch = "main",
 )
