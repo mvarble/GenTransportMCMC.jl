@@ -100,7 +100,7 @@ Note that the first equality above is utilizing the closed form of the standard 
 With this approximation, we choose to instead minimize the following objective function.
 
 ```math
-C(\tilde T) = \sum_{i=1}^d\sum_{k=1}^K \Big(\frac{1}{2} \tilde T_i^2(\theta) - \log\frac{\partial\tilde T_i}{\partial\theta_i}(\theta^{(k)}) \Big)
+C(\tilde T) = \sum_{i=1}^d\sum_{k=1}^K \Big(\frac{1}{2} \tilde T_i^2(\theta^{(k)}) - \log\frac{\partial\tilde T_i}{\partial\theta_i}(\theta^{(k)}) \Big)
 ```
 
 From here, we may reduce the optimization problem from the large space ``\mathcal T`` to a parameterized set of maps ``\{T(\cdot; \gamma)\}_{\gamma \in \mathcal A}`` where ``\mathcal A`` is some nice parameter set.

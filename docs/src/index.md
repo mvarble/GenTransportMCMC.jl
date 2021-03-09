@@ -15,6 +15,7 @@ Depth = 2
 Reference
 ```@contents
 Pages = [
+  "ref/inference.md",
   "ref/transport.md",
 ]
 Depth=2

@@ -8,6 +8,7 @@ makedocs(
     "Getting Started" => "getting_started.md",
     "Mathematical Details" => "mathematical_details.md",
     "API" => [
+      "Inference" => "ref/inference.md",
       "Transport" => "ref/transport.md",
     ],
   ],

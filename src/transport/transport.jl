@@ -1,22 +1,21 @@
-#---------------------------------------------------------------------------------------------
-# transport map types
-#---------------------------------------------------------------------------------------------
+import NLsolve: nlsolve
+import ReverseDiff
+import LinearAlgebra: tr
 
-export OrderedBasis, TransportMap, inverse, TransportFamily
+export OrderedBasis, TransportFamily, TransportMap, inverse, sample_cost
 
 """
     abstract type OrderedBasis end
 
-Abstract type corresponding to an ordered basis of scalar-functions ``(ψ_1, \\ldots, ψ_n)``. 
-An instance `tuple` of this type will act as a map, so that `tuple(Θ)` will correspond to 
-the vector ``(ψ_1(Θ), \\ldots, ψ_n(Θ))``.
+Abstract type corresponding to an ordered basis of scalar-functions 
+``(ψ_j)_{j\\in\\mathcal J_i}``.  An instance `tuple` of this type will act as a map, so that 
+`tuple(θ)` will correspond to the vector ``(ψ_j(θ))_{j \\in \\mathcal J_i}``.
 
 To implement a subtype `B <: OrderedBasis`, one must implement:
 
 ```julia
-(tuple::B)(Θ::AbstractArray{<:Real})::AbstractArray{<:Real}
+(tuple::B)(θ::AbstractArray{<:Real})::AbstractArray{<:Real}
 Base.length(tuple::B)::Int64
-Base.union(tuple::B, tuples...)
 ```
 """
 abstract type OrderedBasis end
@@ -25,76 +24,39 @@ function Base.length(tuple::OrderedBasis)
   error("must implement Base.length(::$(typeof(tuple)))")
 end
 
-function Base.union(tuple::OrderedBasis, tuples...)
-  error("must implement Base.union(tuple::$(typeof(tuple)), tuples...)")
-end
-
 """
     T = TransportFamily(bases::AbstractArray{<:OrderedBasis})
 
-A struct corresponding to a family of lower-triangular vector-valued maps 
-``\\{T(\\cdot; γ)\\}_{γ\\in\\mathcal A}``. The family will have a fixed dimension 
-``d \\in \\mathbb N`` of which each map ``T(\\cdot; γ)`` has the following structure.
+Provide an array `bases` of `OrderedBasis` instances where each element `bases[i]`
+corresponds to some ordered basis ``(ψ_j)_{j\\in\\mathcal J_i}`` and receive the induced 
+family ``\\{ \\tilde T(\\cdot; γ) \\}_{γ \\in \\mathcal A}`` (`T`).
+
+With an instance `T` of a `TransportFamily`, one may apply `T(γ)` to a parameter `γ` and get a 
+`TransportMap` instance corresponding to the map ``T(\\cdot; γ)``.
+Recall, this is defined so that the ``i``-th component ``T_i(\\cdot; γ_i)`` is as follows.
 
 ```math
-T(\\cdot, γ): \\mathbb R^d \\rightarrow \\mathbb R^d
-``` 
-
-Furthermore, the parameter set ``\\mathcal A`` can be written as the following product
-
-```math
-\\mathcal A = \\prod_{i=1}^d \\mathbb R^{|\\mathcal J_i|}
+T_i(θ; γ_i) = \\sum_{j\\in\\mathcal J_i} γ_{i,j} ψ_j(θ)
 ```
-
-where ``\\mathcal J_i`` is an index set for an ordered basis of functions 
-``(ψ_j)_{j\\in\\mathcal J_i}`` which only depend on the first ``i`` input variables.
-This way, each parameter ``γ = (γ_1, \\ldots, γ_d) \\in \\mathcal A`` can determine the 
-components of ``T(\\cdot; γ)`` in the following linear fashion.
-
-```math
-T_i(Θ; γ_i) = \\sum_{j\\in\\mathcal J_i} γ_{i,j} ψ_j(Θ)
-```
-
-The constructor `T = TransportFamily(bases)` is intended to be such that `bases` is an array 
-of ordered bases intended to encode the following.
-
-```math
-\\big( (ψ_j)_{j\\in \\mathcal J_1}, \\ldots, (ψ_j)_{j\\in \\mathcal J_n} \\big)
-```
-
-From here, 
-
-```julia
-T(γ::AbstractArray{<:AbstractArray{<:Real}})
-``` 
-
-returns a `TransportMap` type which can be evaluated so that
-
-```julia
-(T(γ::AbstractArray{<:AbstractArray{<:Real}})Θ::AbstractArray{<:Real})
-```
-
-encodes ``T(Θ; γ)``.
-
 """
 struct TransportFamily{B <: OrderedBasis}
   bases::AbstractArray{B}
 end
 
-function Base.display(T::TransportFamily{B}) where B <: OrderedBasis
+function Base.display(T::TransportFamily)
   println(
-  """
-  TransportFamily{$B}
-  $(join(map(p -> "  J_$(p[1]) = $(p[2])\n", enumerate(T.bases))))
-  """)
+    """
+    TransportFamily on R^$(length(T.bases))
+    $(join(map(p -> "  J_$(p[1]) = $(p[2])", enumerate(T.bases)), "\n"))"""
+  )
 end
 
 """
     map = TransportMap(dim, parameter, f)
 
 Wrap a provided function `f` with a `TransportMap` type for the type checking.
-In addition, we keep track of the dimension (`dim`) of the vector space on which `f` is defined
-and the parameter (`parameter`) of the specific map.
+In addition, we keep track of the dimension (`dim`) of the vector space on which `f` is 
+defined and the parameter (`parameter`) of the specific map.
 """
 struct TransportMap{B <: OrderedBasis}
   dim::Int
@@ -104,7 +66,7 @@ end
 
 function (F::TransportMap)(theta)::AbstractArray{<:Real}
   if length(theta) !== F.dim
-    throw(ArgumentError("$theta must have same length as $gamma"))
+    throw(ArgumentError("$theta must have length as $(F.dim)"))
   end
   r = F.f(theta)
   if length(r) !== F.dim
@@ -115,30 +77,12 @@ end
 
 function Base.display(F::TransportMap{B}) where B <: OrderedBasis
   println(
-  """
-  TransportMap{$B}
-  $(join(map(p -> "  γ_$(p[1]) = $(p[2])\n", enumerate(F.parameter))))
-  """
+    """
+    TransportMap{$B}
+    $(join(map(p -> "  γ_$(p[1]) = $(p[2])", enumerate(F.parameter)), "\n"))"""
   )
 end
 
-"""
-    theta = inverse(tmap::TransportMap, r)
-
-Return ``Θ`` (`theta`) such that ``T(Θ; γ) = r``, where ``T(\\cdot; γ)`` is our transport map 
-(`tmap`) and ``r`` is provided by (`r`).
-"""
-function inverse(tmap::TransportMap, r)::AbstractArray{<:Real}
-  throw(ArgumentError("must implement inverse(::$(typeof(tmap)), ::$(typeof(r)))."))
-end
-
-"""
-    isa(T, TransportFamily) # true
-    map = T(gamma)
-
-Given some instance of a transport family `T`, `T(gamma)` returns a specific transport map `
-`T(\\cdot; γ)`` (`map`) corresponding to parameter ``γ`` (`gamma`).
-"""
 function (T::TransportFamily{B})(gamma::AbstractArray{<:AbstractArray{<:Real}})::TransportMap{B} where B
   # make sure there is a parameter for each component function
   if (length(gamma) !== length(T.bases))
@@ -164,6 +108,59 @@ function (T::TransportFamily{B})(gamma::AbstractArray{<:AbstractArray{<:Real}}):
   end)
 end
 
+"""
+    theta = inverse(tmap::TransportMap, r)
+
+Return ``θ`` such that ``T(θ; γ) = r``, where ``T(\\cdot; γ)`` is our transport map 
+(`tmap`).
+"""
+function inverse(tmap::TransportMap, r::AbstractArray{<:Real})::AbstractArray{<:Real}
+  if length(r) !== tmap.dim
+    throw(ArgumentError("$r must have length $(tmap.dim)"))
+  end
+  reduce(
+    (theta, pair) -> begin
+      # unpack the index and image component
+      i, r_i = pair
+
+      # preallocate the theta components we have solved and those that are unused
+      theta_solved = theta[1:(i-1)]
+      theta_unused = theta[(i+1):end]
+
+      # create the partially-evaluated component function, ready for NLsolve
+      func! = (F, x) -> begin
+        F[1] = tmap([theta_solved..., x[1], theta_unused...])[i] - r_i
+      end
+
+      # solve the variable and return the update
+      theta_i = nlsolve(func!, [0.0]).zero[1]
+      [theta_solved..., theta_i, theta_unused...]
+    end, 
+    enumerate(r);
+    init=zeros(tmap.dim)
+  )
+end
+
+"""
+    cost = sample_cost(tmap::TransportMap, samples::AbstractArray{<:AbstractArray{<:Real}})
+
+Compute the cost ``C(\\tilde T(\\cdot; γ))`` of a transport map 
+``\\tilde T(\\cdot; γ)`` based off of samples ``θ_1, \\ldots, θ_K``.
+
+```math
+C\\big(\\tilde T(\\cdot; γ)\\big) = \\sum_{i=1}^d\\sum_{k=1}^K \\Big( 
+  \\frac{1}{2} \\tilde T_i^2(θ^{(k)}; γ_i) - \\log\\frac{∂\\tilde T_i(\\cdot; γ_i)}{∂θ_i}(θ^{(k)}) 
+\\Big)
+```
+"""
+function sample_cost(tmap::TransportMap, samples::AbstractArray{<:AbstractArray{<:Real}})
+  sum(
+    map(
+      sample -> 0.5 * sum(tmap(sample).^2) - tr(log.(ReverseDiff.jacobian(tmap, sample))),
+      samples,
+    )
+  )
+end
 
 #---------------------------------------------------------------------------------------------
 # specific implementations

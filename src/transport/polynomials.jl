@@ -1,15 +1,15 @@
 export hermite, HermiteBasis
 
 """
-    y = hermite(n::Int, x::T) where T <: Real
+    y = hermite(n::Int, x::Real)
 
-Evaluate the ``n``-degree (`n`) Hermite polynomial at ``x`` (`x`).
+Evaluate the ``n``-degree Hermite polynomial at ``x``.
 
 ```math
 n!\\sum_{m=0}^{[n/2]} \\frac{(-1)^m}{m!(n-2m)!} \\frac{x^{n-2m}}{2^m}
 ```
 """
-function hermite(n::Int, x::T) where T <: Real
+function hermite(n::Int, x::Real)
   if n == 0
     1
   else
@@ -23,21 +23,21 @@ end
 """
     basis = HermiteBasis(vectors)
 
-Encode an ordered basis (`basis`) of polynomials ``(ψ_j)_{j\\in J}`` of the form
+Encode an ordered basis (`basis`) of polynomials ``(ψ_j)_{j\\in \\mathcal J_i}`` of the form
 
 ```math
-ψ_{(j_1,\\ldots,j_n)}(Θ_1, \\ldots, Θ_n) = \\prod_{k=1}^n φ_{j_k}(Θ_k),
+ψ_{(j_1,\\ldots,j_n)}(θ_1, \\ldots, θ_n) = \\prod_{k=1}^n φ_{j_k}(θ_k),
 ```
 
 where ``φ_{j_k}`` is the Hermite polynomial of degree ``j_k``.
-The index tuple ``J`` of the polynomials is provided by `vectors` in the natural way.
-For example, 
+The indices ``\\mathcal J_i`` of the polynomials is provided by `vectors` in the natural 
+way. For example, 
 
 ```julia
 HermiteBasis([[1, 2, 3], [0, 1, 1, 2]])
 ```
 
-will encode ``( ψ_{(1,2,3)}, ψ_{(0,1,1,2)} )``.
+will encode the ordered basis ``( ψ_{(1,2,3)}, ψ_{(0,1,1,2)} )``.
 """
 struct HermiteBasis <: OrderedBasis
   vectors::AbstractArray{<:AbstractArray{<:Int}}
